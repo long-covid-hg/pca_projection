@@ -25,7 +25,7 @@ Rscript plot_projected_pc.R \
   --out [output name prefix]
 ```
 
-Ancestry codes for `--ancestry` are from [the flagship paper](https://www.medrxiv.org/content/10.1101/2021.03.10.21252820v1):
+Ancestry codes for `--ancestry` are from [the flagship paper](https://doi.org/10.1038/s41586-021-03767-x):
 
 - African (AFR)
 - Admixed American (AMR)
@@ -47,4 +47,4 @@ If your system doesn't have access to the Internet, please download a reference 
 
 ## Upload
 
-Please upload all the `.png` files and `.projected.pca.tsv.gz` file. Detailed instruction can be found [here](https://docs.google.com/document/d/1Z8Vurk49RsTyX9YRhcleXKZomZwG84lj2V_YXjUi1LI/edit).
+Please upload all the `.png` files and `.projected.pca.tsv.gz` file. Instructions for uploading can be found [here](https://docs.google.com/document/d/1XRQgDOEp62TbWaqLYi1RAk1OHVP5T3XZqfs_6PoPt_k/edit#heading=h.5qjedejw6g70).

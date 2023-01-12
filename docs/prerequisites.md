@@ -18,17 +18,17 @@ We provide variant IDs in three formats: 1) `chromosome:position:ref:alt` in GRC
 
 ### GRCh37
 
-- Pre-compmuted PCA loadings: [hgdp_tgp_pca_covid19hgi_snps_loadings.GRCh37.plink.tsv](https://storage.googleapis.com/covid19-hg-public/pca_projection/hgdp_tgp_pca_covid19hgi_snps_loadings.GRCh37.plink.tsv)
+- Pre-computed PCA loadings: [hgdp_tgp_pca_covid19hgi_snps_loadings.GRCh37.plink.tsv](https://storage.googleapis.com/covid19-hg-public/pca_projection/hgdp_tgp_pca_covid19hgi_snps_loadings.GRCh37.plink.tsv)
 - Reference allele frequencies: [hgdp_tgp_pca_covid19hgi_snps_loadings.GRCh37.plink.afreq](https://storage.googleapis.com/covid19-hg-public/pca_projection/hgdp_tgp_pca_covid19hgi_snps_loadings.GRCh37.plink.afreq)
 
 ### GRCh38
 
-- Pre-compmuted PCA loadings: [hgdp_tgp_pca_covid19hgi_snps_loadings.GRCh38.plink.tsv](https://storage.googleapis.com/covid19-hg-public/pca_projection/hgdp_tgp_pca_covid19hgi_snps_loadings.GRCh38.plink.tsv)
+- Pre-computed PCA loadings: [hgdp_tgp_pca_covid19hgi_snps_loadings.GRCh38.plink.tsv](https://storage.googleapis.com/covid19-hg-public/pca_projection/hgdp_tgp_pca_covid19hgi_snps_loadings.GRCh38.plink.tsv)
 - Reference allele frequencies: [hgdp_tgp_pca_covid19hgi_snps_loadings.GRCh38.plink.afreq](https://storage.googleapis.com/covid19-hg-public/pca_projection/hgdp_tgp_pca_covid19hgi_snps_loadings.GRCh38.plink.afreq)
 
 ### rsid
 
-- Pre-compmuted PCA loadings: [hgdp_tgp_pca_covid19hgi_snps_loadings.rsid.plink.tsv](https://storage.googleapis.com/covid19-hg-public/pca_projection/hgdp_tgp_pca_covid19hgi_snps_loadings.rsid.plink.tsv)
+- Pre-computed PCA loadings: [hgdp_tgp_pca_covid19hgi_snps_loadings.rsid.plink.tsv](https://storage.googleapis.com/covid19-hg-public/pca_projection/hgdp_tgp_pca_covid19hgi_snps_loadings.rsid.plink.tsv)
 - Reference allele frequencies: [hgdp_tgp_pca_covid19hgi_snps_loadings.rsid.plink.afreq](https://storage.googleapis.com/covid19-hg-public/pca_projection/hgdp_tgp_pca_covid19hgi_snps_loadings.rsid.plink.afreq)
 
 ### For advanced users: Hail format
@@ -98,7 +98,7 @@ plink \
 First, please collect file names of the filtered per-chromosome pfiles above.
 
 ```
-ls [outname].*.bed | sed -e ‘s/.bed//’ > merge-list.txt
+ls [outname].*.bed | sed -e 's/.bed//' > merge-list.txt
 ```
 
 Then, use `plink --merge-list` to merge.
@@ -118,11 +118,11 @@ For each chromosome file, please run the following extraction command:
 ```
 bgenix \
   -g [path to your per-chromosome bgen] \
-  -incl-rsids variant.extract \
+  -incl-rsids variants.extract \
   > [per-chromosome output name].bgen
 ```
 
-If your `.bgen` files have different variant IDs, please make appropriate list of `variant.extract`. You can check variant IDs via `bgenix -g [path to bgen] -list`.
+If your `.bgen` files have different variant IDs, please make appropriate list of `variants.extract`. You can check variant IDs via `bgenix -g [path to bgen] -list`.
 
 #### Merging
 
@@ -166,7 +166,7 @@ For each chromosome file, please run the following extraction command:
 
 ```
 bcftools view -Oz \
-  -i “ID = @variants.extract” \
+  -i "ID = @variants.extract" \
   [path to your per-chromosome vcf file] \
   > [per-chromosome outname>.vcf.gz]
 ```
