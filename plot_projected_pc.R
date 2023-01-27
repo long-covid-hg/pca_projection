@@ -134,13 +134,14 @@ main <- function(args) {
   # available ID cols: PLINK2 now accepts only IID
   id_cols <- intersect(colnames(projected_pc), c("FID", "IID"))
 
-  # Load projected PCs
+  # Count projected PC vars for rescaling projected PCs
   message(sprintf("Loading --sscore-vars %s", args$sscore_vars))
   n_sscore_vars <- data.table::fread(args$sscore_vars, header = FALSE) %>%
     nrow()
 
-  # divide by sqrt(n_sscore_vars)
-  projected_pc[, plot_pcs] <- projected_pc[, plot_pcs] / sqrt(n_sscore_vars)
+  # Divide by sqrt(n_sscore_vars) to rescale projected PCs
+  #projected_pc[, plot_pcs] <- projected_pc[, plot_pcs] / sqrt(n_sscore_vars)
+  eval(parse(text=paste0("projected_pc[,c(\"",paste0(plot_pcs,collapse='","'),"\")] <- projected_pc[,c(\"",paste0(plot_pcs,collapse='","'),"\")] / sqrt(n_sscore_vars)")))
 
   # Load cohort PCs
   message(sprintf("Loading --covariate-file %s", args$covariate_file))

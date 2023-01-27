@@ -25,6 +25,8 @@ Rscript plot_projected_pc.R \
   --out [output name prefix]
 ```
 
+The phenotype and covariate files should contain ID columns of the same name, which can either be just one column named `IID` or two columns named `FID` and `IID`. If the phenotype and covariates are contained within the same file, you should pass this filename to both `--phenotype-file` and `--covariate-file` flags. It is fine for these files to be gzip compressed.
+
 Ancestry codes for `--ancestry` are from [the flagship paper](https://doi.org/10.1038/s41586-021-03767-x):
 
 - African (AFR)
@@ -40,6 +42,7 @@ If your cohort contains multiple ancestries, please use `--ancestry-file` and `-
   --ancestry-file [path to ancestry file] \
   --ancestry-col [ancestry column name]
 ```
+The named ancestry file (passed to `--ancestry-file`) should have the same ID columns as the phenotype and covariate files (see above).
 
 If your cohort submits multiple analyses, please run the script with different `--phenotype-col`. It will automatically excludes samples without case/control status.
 

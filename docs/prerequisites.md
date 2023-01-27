@@ -122,7 +122,7 @@ bgenix \
   > [per-chromosome output name].bgen
 ```
 
-If your `.bgen` files have different variant IDs, please make appropriate list of `variants.extract`. You can check variant IDs via `bgenix -g [path to bgen] -list`.
+If your `.bgen` files have different variant IDs, please make appropriate list of `variants.extract`. You can check variant IDs by first indexing your `.bgen` files with the command `bgenix -g [path to bgen] -index` (if they are not already indexed) and then listing the variants within your `.bgen` via `bgenix -g [path to bgen] -list`.
 
 #### Merging
 
@@ -148,13 +148,19 @@ plink2 \
   --out [output pfile name]
 ```
 
+If you receive the error message
+```
+Error: .bgen file does not contain sample IDs, and no .sample file was specified.
+```
+then you must also include the location of your `.sample` file (corresponding to your original `.bgen` files), using the flag `--sample [path to sample]`.
+
 For `[REF/ALT mode]`, please refer to [the PLINK 2 documentation](https://www.cog-genomics.org/plink/2.0/input#oxford). Basically, you can specify the following three options.
 
 > - 'ref-first': The first allele for each variant is REF.
 > - 'ref-last': The last allele for each variant is REF.
 > - 'ref-unknown': The last allele for each variant is treated as provisional-REF.
 
-You can see whether REF is first/alt by checking `bgenix -g [path to bgen] -list`.
+You can see whether REF is first/alt by checking `bgenix -g [path to bgen] -list` (after indexing, if needed, using the command `bgenix -g [path to bgen] -index`).
 
 ### VCF format (`.vcf`)
 

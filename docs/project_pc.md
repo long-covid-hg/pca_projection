@@ -16,6 +16,8 @@ You need to prepare imputed dosage files in PLINK binary format. Please refer to
 - `PFILE`: [Recommended] PLINK 2 binary format
 - `BFILE`: [Acceptable] PLINK 1 binary format
 
+The script will try to invoke `plink2`, but if this command is not available you can also edit the `PLINK2PATH` parameterin the `project_pc.sh` script.
+
 ## Run the script
 
 After setting the variables, please run the script.
