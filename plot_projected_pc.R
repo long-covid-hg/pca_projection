@@ -61,7 +61,7 @@ get_pop_colors <- function(pop = NULL) {
 # cf. https://github.com/atgu/ukbb_pan_ancestry/blob/master/plot_ukbb_pca.R
 plot_pca <- function(dataset, first_pc, second_pc, color_pop, xlim = NULL, ylim = NULL) {
   pc_biplot <-
-    dplyr::arrange(dataset, !!as.symbol(color_pop)) %>%
+    dplyr::arrange(dataset, !is.na(!!as.symbol(color_pop)),!!as.symbol(color_pop)) %>%
     ggplot(aes_string(x = first_pc, y = second_pc, color = color_pop)) +
     geom_point(alpha = 0.2) +
     guides(color = guide_legend(override.aes = list(alpha = 1))) +
@@ -188,6 +188,10 @@ main <- function(args) {
     dplyr::left_join(cohort_pc, pheno) %>%
     tidyr::drop_na(pheno)
 
+  # Create separate data frame that includes reference samples
+  eval(parse(text=paste0("ref_pc <- data.frame(",paste0(id_cols,"=reference_score$s",collapse=","),",ALLELE_CT=",n_sscore_vars,",NAMED_ALLELE_DOSAGE=NA,",paste0(plot_pcs,"=reference_score$",plot_pcs,collapse=","),",pop=NA,pheno=NA,study=\"",args$study,"\")")))
+  projected_pc_with_ref <- rbind(projected_pc,ref_pc)
+
   # Plot PC figures
   plot_all <- function(df, prefix, study, pc_num, reference_range = list()) {
     pcs <- paste0("PC", seq(pc_num))
@@ -197,7 +201,7 @@ main <- function(args) {
       }), list(patchwork::guide_area()))) +
       patchwork::plot_layout(ncol = 2, guides = "collect") +
       patchwork::plot_annotation(
-        title = sprintf("%s (by ancestry): # samples = %d, # variants = %d", study, nrow(df), n_sscore_vars),
+        title = sprintf("%s (by ancestry): # samples = %d, # variants = %d", study, sum(!is.na(df$pop)), n_sscore_vars),
         theme = theme(plot.title = element_text(size = 8))
       )
 
@@ -207,7 +211,7 @@ main <- function(args) {
       }), list(patchwork::guide_area()))) +
       patchwork::plot_layout(ncol = 2, guides = "collect") +
       patchwork::plot_annotation(
-        title = sprintf("%s (by case/control): # samples = %d, # variants = %d", study, nrow(df), n_sscore_vars),
+        title = sprintf("%s (by case/control): # samples = %d, # variants = %d", study, sum(!is.na(df$pop)), n_sscore_vars),
         theme = theme(plot.title = element_text(size = 8))
       )
 
@@ -218,7 +222,7 @@ main <- function(args) {
       })) +
       patchwork::plot_layout(ncol = 2) +
       patchwork::plot_annotation(
-        title = sprintf("%s (density): # samples = %d, # variants = %d", study, nrow(df), n_sscore_vars),
+        title = sprintf("%s (density): # samples = %d, # variants = %d", study, sum(!is.na(df$pop)), n_sscore_vars),
         theme = theme(plot.title = element_text(size = 8))
       )
 
@@ -231,6 +235,21 @@ main <- function(args) {
     )
   }
 
+  plot_pca_only <- function(df, prefix, study, pc_num, reference_range = list()) {
+    pcs <- paste0("PC", seq(pc_num))
+    pca <-
+      Reduce(`+`, c(apply(matrix(pcs, ncol = 2, byrow = TRUE), 1, function(pc) {
+        plot_pca(df, pc[1], pc[2], "pop", xlim = reference_range[[pc[1]]], ylim = reference_range[[pc[2]]])
+      }), list(patchwork::guide_area()))) +
+      patchwork::plot_layout(ncol = 2, guides = "collect") +
+      patchwork::plot_annotation(
+        title = sprintf("%s (by ancestry): # samples = %d, # variants = %d", study, sum(!is.na(df$pop)), n_sscore_vars),
+        theme = theme(plot.title = element_text(size = 8))
+      )
+    save_plots(pca, paste0(prefix, ".pca.ancestry"), pc_num)
+  }
+
+
   message("Plotting PC figures...")
   plot_all(
     projected_pc,
@@ -240,6 +259,7 @@ main <- function(args) {
     reference_range = reference_range
   )
   plot_all(cohort_pc, paste0(args$out, ".cohort"), args$study, pc_num = args$pc_num)
+  plot_pca_only(projected_pc_with_ref,paste0(args$out, ".cohort.with.ref"),args$study, pc_num = args$plot_pc_num)
 
   # Export per-sample PC values
   if (!args$disable_export) {
