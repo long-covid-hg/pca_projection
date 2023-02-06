@@ -190,7 +190,7 @@ main <- function(args) {
 
   # Create separate data frame that includes reference samples
   eval(parse(text=paste0("ref_pc <- data.frame(",paste0(id_cols,"=reference_score$s",collapse=","),",ALLELE_CT=",n_sscore_vars,",NAMED_ALLELE_DOSAGE=NA,",paste0(plot_pcs,"=reference_score$",plot_pcs,collapse=","),",pop=NA,pheno=NA,study=\"",args$study,"\")")))
-  projected_pc_with_ref <- rbind(projected_pc,ref_pc)
+  projected_pc_with_ref <- dplyr::bind_rows(projected_pc,ref_pc)
 
   # Plot PC figures
   plot_all <- function(df, prefix, study, pc_num, reference_range = list()) {
