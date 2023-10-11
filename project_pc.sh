@@ -76,7 +76,7 @@ else
       echo "plink2 command cannot be found - please specify correct location of plink2 executable"
       exit 1
    else
-      plink2="$PLINK2PATH"
+      plink2="plink2"
    fi
 fi
 
